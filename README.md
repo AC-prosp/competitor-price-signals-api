@@ -33,8 +33,10 @@ It returns structured data and can trigger webhooks so your systems can react in
   "timestamp": "2026-04-15T10:00:00Z"
 }
 
-Quick start
+## Quick start
+
 1. Create a monitor
+
 POST /api/monitors
 {
   "url": "https://example.com/product",
@@ -43,54 +45,51 @@ POST /api/monitors
 }
 
 2. (Optional) Add a webhook
+
 Receive updates automatically when a change is detected.
 
 3. Get changes
+
 GET /api/changes/latest
 
-Use cases:
-Track competitor pricing
-React instantly to price drops
-Monitor stock availability
-Automate pricing decisions
-Power internal tools or AI agents
+## Use cases:
+-Track competitor pricing
+-React instantly to price drops
+-Monitor stock availability
+-Automate pricing decisions
+-Power internal tools or AI agents
 
-How it works:
+## Example use case:
+
+Automatically react to competitor price changes:
+
+Monitor a competitor product page
+Receive webhook when price changes
+Trigger pricing updates or alerts
+
+## How it works:
 Add a product URL
 The system extracts structured data
 Changes are detected and classified
 Results are returned via API or sent via webhook
 
-Design goals:
+## Design goals:
 Detect meaningful changes, not noise
 Provide clean, structured data
 Be easy to integrate
 Enable automation, not just alerts
 
-Limitations:
+## Limitations:
 Accuracy depends on page structure
 Some dynamic pages may be harder to parse
 Detection improves over time
 
-License:
+Try it
+
+https://yourwebsite.com
+
+## License
+
 MIT
 
----
-
-#  Why this version is better
-
-- Shorter → higher engagement  
-- Quick start is immediate  
-- No fluff sections devs ignore  
-- Clear use cases  
-- Honest limitations (builds trust)
-
----
-
-#  One optional upgrade (high impact)
-
-At the very top, you can add:
-
-```md
-Simple API to detect competitor price changes and trigger actions.
 
