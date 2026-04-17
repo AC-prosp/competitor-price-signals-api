@@ -104,7 +104,7 @@ Automatically react to competitor price changes:
 
 ## Try it
 
-https://yourwebsite.com
+https:// webintel.io
 
 ---
 
