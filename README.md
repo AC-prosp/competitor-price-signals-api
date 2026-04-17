@@ -2,22 +2,25 @@
 
 Track competitor price and product changes in real time and trigger automated actions.
 
-## Overview
+Set up in under 60 seconds. No scraping setup required.
 
-Competitors change prices, stock, and product listings constantly. Reacting late can cost revenue.
+---
 
-This API monitors product pages and detects meaningful changes such as price updates and availability changes. It returns structured data and can trigger webhooks so your systems can respond immediately.
+## What this does
 
-## Features
+Competitors change prices, stock, and products constantly. If you react too late, you lose revenue.
 
-- Detect price drops and increases
-- Monitor stock availability changes
-- Structured JSON output
-- Webhook support for real-time automation
-- Designed for developers and automation systems
-- Fast and reliable monitoring
+This API monitors product pages and detects meaningful changes such as:
 
-## Example Response
+- Price drops and increases
+- Stock availability changes
+- Product updates
+
+It returns structured data and can trigger webhooks so your systems can react instantly.
+
+---
+
+## Example response
 
 ```json
 {
