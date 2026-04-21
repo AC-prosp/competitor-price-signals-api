@@ -1,35 +1,37 @@
-# Competitor Price Monitoring API
+# Webintel
 
-Track competitor price and product changes in real time and trigger automated actions.
+Real-time competitor price and stock change signals.
 
-Set up in under 60 seconds. No scraping setup required.
-
----
-
-## What this does
-
-Competitors change prices, stock, and products constantly. If you react too late, you lose revenue.
-
-This API monitors product pages and detects meaningful changes such as:
-
-- Price drops and increases  
-- Stock availability changes  
-- Product updates  
-
-It returns structured data and can trigger webhooks so your systems can react instantly.
+Know instantly when something important changes — without scraping, polling, or noise.
 
 ---
 
-## Example response
+## What this is
+
+Most tools either:
+
+- give you raw scraped data  
+- or alert you every time *anything* changes  
+
+Neither is what you actually need.
+
+Webintel focuses on one thing:
+
+→ detecting **meaningful changes** (price drops, increases, stock changes)  
+→ returning them as **clean, structured events**  
+→ letting you **act on them instantly**
+
+---
+
+## Example output
 
     {
-      "change_type": "price_drop",
-      "product_name": "Running Shoes X",
+      "event": "price_drop",
+      "product": "Running Shoes X",
       "old_price": 120,
       "new_price": 95,
-      "percentage_change": 21,
-      "ai_summary": "Price dropped significantly, likely a promotion",
-      "timestamp": "2026-04-15T10:00:00Z"
+      "change": -21,
+      "timestamp": "2026-04-20T10:00:00Z"
     }
 
 ---
@@ -38,77 +40,131 @@ It returns structured data and can trigger webhooks so your systems can react in
 
 ### 1. Create a monitor
 
-POST /api/monitors
+POST /v1/signals/subscribe
 
     {
       "url": "https://example.com/product",
-      "type": "product",
-      "check_interval_minutes": 10
+      "events": ["price_drop", "price_increase", "stock_change"],
+      "webhook_url": "https://yourapp.com/webhook"
     }
 
-### 2. (Optional) Add a webhook
+---
 
-Receive updates automatically when a change is detected.
+### 2. Wait for events
 
-### 3. Get changes
+When something changes, you receive:
 
-GET /api/changes/latest
+    {
+      "event": "price_drop",
+      "url": "https://example.com/product",
+      "old_price": 120,
+      "new_price": 95,
+      "timestamp": "2026-04-20T10:00:00Z"
+    }
+
+---
+
+### 3. Do something with it
+
+Typical flows:
+
+- update your pricing  
+- send an alert  
+- trigger automation  
+- feed into internal tools or AI workflows  
+
+---
+
+## Why this exists
+
+Tracking competitor prices sounds simple.
+
+In practice, it usually means:
+
+- running scrapers on intervals  
+- storing snapshots  
+- comparing data manually  
+- filtering noise  
+
+Webintel removes that layer.
+
+You don’t get raw data.
+
+You get the **signal**.
+
+---
+
+## What makes it different
+
+- No scraping setup  
+- No polling or scheduling  
+- No irrelevant changes  
+- Structured events, not HTML or screenshots  
+- Built for automation, not dashboards  
 
 ---
 
 ## Use cases
 
-- Track competitor pricing  
-- React instantly to price drops  
+- Track competitor pricing automatically  
+- Detect price drops instantly  
 - Monitor stock availability  
-- Automate pricing decisions  
-- Power internal tools or AI agents  
+- Power dynamic pricing systems  
+- Feed clean signals into AI agents  
 
 ---
 
-## Example use case
+## Pricing
 
-Automatically react to competitor price changes:
+Free:
+- 50 signals/month  
 
-1. Monitor a competitor product page  
-2. Receive webhook when price changes  
-3. Trigger pricing updates or alerts  
+Usage:
+- $0.003 per signal  
 
----
+Pro:
+- $19/month (includes 500 signals + lower rate)
 
-## How it works
+1 signal = one meaningful change (price or stock)
 
-1. Add a product URL  
-2. The system extracts structured data  
-3. Changes are detected and classified  
-4. Results are returned via API or sent via webhook  
+You don’t pay for checks. Only for actual changes.
 
 ---
 
-## Design goals
+## Mental model
 
-- Detect meaningful changes, not noise  
-- Provide clean, structured data  
-- Be easy to integrate  
-- Enable automation, not just alerts  
+Instead of:
+
+“Something on the page changed”
+
+You get:
+
+“Price dropped from £120 → £95”
 
 ---
 
-## Limitations
+## Status
 
-- Accuracy depends on page structure  
-- Some dynamic pages may be harder to parse  
-- Detection improves over time  
+Early-stage. Actively improving detection accuracy and reliability.
+
+If something breaks or feels off, it probably is — and that feedback is useful.
 
 ---
 
 ## Try it
 
-https:// webintel.io
+https://webintel.io
+
+---
+
+## Notes
+
+- Works best on product pages with clear pricing  
+- Some dynamic or heavily obfuscated sites may be less reliable  
+- Detection improves over time  
 
 ---
 
 ## License
 
 MIT
-
