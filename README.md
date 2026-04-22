@@ -1,38 +1,35 @@
 # Webintel
 
-Real-time competitor price and stock change signals.
+Real-time price and stock change detection — delivered as clean events.
 
-Know instantly when something important changes — without scraping, polling, or noise.
+Track competitor pricing, detect meaningful changes instantly, and trigger actions via API and webhooks.
 
 ---
 
-## What this is
+## What this does
 
-Most tools either:
+Instead of scraping pages or polling repeatedly, Webintel detects **only meaningful changes**:
 
-- give you raw scraped data  
-- or alert you every time *anything* changes  
+* Price drops
+* Price increases
+* Back in stock
+* Out of stock
 
-Neither is what you actually need.
-
-Webintel focuses on one thing:
-
-→ detecting **meaningful changes** (price drops, increases, stock changes)  
-→ returning them as **clean, structured events**  
-→ letting you **act on them instantly**
+You receive structured events when something actually matters.
 
 ---
 
 ## Example output
 
-    {
-      "event": "price_drop",
-      "product": "Running Shoes X",
-      "old_price": 120,
-      "new_price": 95,
-      "change": -21,
-      "timestamp": "2026-04-20T10:00:00Z"
-    }
+```json
+{
+  "event": "price_drop",
+  "url": "https://example.com/product",
+  "old_price": 120,
+  "new_price": 95,
+  "timestamp": "2026-04-20T10:00:00Z"
+}
+```
 
 ---
 
@@ -40,94 +37,241 @@ Webintel focuses on one thing:
 
 ### 1. Create a monitor
 
-POST /v1/signals/subscribe
+```bash
+curl -X POST https://api.webintel.io/v1/signals/subscribe \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://example.com/product",
+    "events": ["price_drop", "price_increase", "back_in_stock", "out_of_stock"],
+    "webhook_url": "https://yourapp.com/webhook"
+  }'
+```
 
-    {
-      "url": "https://example.com/product",
-      "events": ["price_drop", "price_increase", "stock_change"],
-      "webhook_url": "https://yourapp.com/webhook"
-    }
+Response:
 
----
-
-### 2. Wait for events
-
-When something changes, you receive:
-
-    {
-      "event": "price_drop",
-      "url": "https://example.com/product",
-      "old_price": 120,
-      "new_price": 95,
-      "timestamp": "2026-04-20T10:00:00Z"
-    }
+```json
+{
+  "id": "monitor_123",
+  "status": "active"
+}
+```
 
 ---
 
-### 3. Do something with it
+### 2. Receive events (webhook)
 
-Typical flows:
+Your webhook will receive:
 
-- update your pricing  
-- send an alert  
-- trigger automation  
-- feed into internal tools or AI workflows  
-
----
-
-## Why this exists
-
-Tracking competitor prices sounds simple.
-
-In practice, it usually means:
-
-- running scrapers on intervals  
-- storing snapshots  
-- comparing data manually  
-- filtering noise  
-
-Webintel removes that layer.
-
-You don’t get raw data.
-
-You get the **signal**.
+```json
+{
+  "event": "back_in_stock",
+  "url": "https://example.com/product",
+  "timestamp": "2026-04-20T10:00:00Z"
+}
+```
 
 ---
 
-## What makes it different
+### 3. Act on it
 
-- No scraping setup  
-- No polling or scheduling  
-- No irrelevant changes  
-- Structured events, not HTML or screenshots  
-- Built for automation, not dashboards  
+Typical uses:
 
----
-
-## Use cases
-
-- Track competitor pricing automatically  
-- Detect price drops instantly  
-- Monitor stock availability  
-- Power dynamic pricing systems  
-- Feed clean signals into AI agents  
+* Update pricing automatically
+* Send alerts
+* Trigger workflows
+* Feed into AI agents
 
 ---
 
-## Pricing
+## API
 
-Free:
-- 50 signals/month  
+### Base URL
 
-Usage:
-- $0.003 per signal  
+```
+https://api.webintel.io/v1
+```
 
-Pro:
-- $19/month (includes 500 signals + lower rate)
+---
 
-1 signal = one meaningful change (price or stock)
+### Authentication
 
-You don’t pay for checks. Only for actual changes.
+All requests require an API key:
+
+```
+Authorization: Bearer YOUR_API_KEY
+```
+
+---
+
+### Endpoints
+
+**Create monitor**
+
+```
+POST /signals/subscribe
+```
+
+```json
+{
+  "url": "https://example.com/product",
+  "events": ["price_drop", "back_in_stock"],
+  "webhook_url": "https://yourapp.com/webhook"
+}
+```
+
+---
+
+**List monitors**
+
+```
+GET /signals
+```
+
+---
+
+**Delete monitor**
+
+```
+DELETE /signals/{id}
+```
+
+---
+
+## Code examples
+
+### Node.js
+
+```js
+const fetch = require("node-fetch");
+
+fetch("https://api.webintel.io/v1/signals/subscribe", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    url: "https://example.com/product",
+    events: ["price_drop", "back_in_stock"]
+  })
+})
+.then(res => res.json())
+.then(console.log);
+```
+
+---
+
+### Python
+
+```python
+import requests
+
+url = "https://api.webintel.io/v1/signals/subscribe"
+
+headers = {
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json"
+}
+
+data = {
+    "url": "https://example.com/product",
+    "events": ["price_drop", "back_in_stock"]
+}
+
+response = requests.post(url, json=data, headers=headers)
+
+print(response.json())
+```
+
+---
+
+## Webhook example (Node.js)
+
+```js
+const express = require("express");
+const app = express();
+
+app.use(express.json());
+
+app.post("/webhook", (req, res) => {
+  const event = req.body;
+
+  console.log("Received:", event);
+
+  if (event.event === "price_drop") {
+    console.log(`Price dropped: ${event.old_price} → ${event.new_price}`);
+  }
+
+  if (event.event === "back_in_stock") {
+    console.log("Back in stock:", event.url);
+  }
+
+  res.sendStatus(200);
+});
+
+app.listen(3000, () => {
+  console.log("Webhook running on port 3000");
+});
+```
+
+---
+
+## Supported events
+
+* price_drop
+* price_increase
+* back_in_stock
+* out_of_stock
+
+---
+
+## Errors
+
+* 400 — invalid request
+* 401 — invalid API key
+* 429 — rate limit exceeded
+* 500 — server error
+
+---
+
+## Rate limits
+
+* ~60 requests per minute per API key
+* Short bursts allowed
+
+---
+
+## Retry strategy
+
+* Retry up to 3 times
+* Use exponential backoff (1s → 2s → 4s)
+* Handle 429 and 5xx errors
+
+---
+
+## Best practices
+
+* Use webhooks instead of polling
+* Subscribe only to relevant events
+* Avoid duplicate monitors
+* Store monitor IDs
+
+---
+
+## Scaling
+
+* Batch monitor creation
+* Queue webhook processing
+* Ensure idempotent handlers
+
+---
+
+## Integrations
+
+* n8n → trigger workflows via webhook
+* Zapier → connect to other tools
+* LangChain → feed events into AI agents
 
 ---
 
@@ -135,36 +279,20 @@ You don’t pay for checks. Only for actual changes.
 
 Instead of:
 
-“Something on the page changed”
+"Something on the page changed"
 
 You get:
 
-“Price dropped from £120 → £95”
+"Price dropped from £120 → £95"
 
 ---
 
 ## Status
 
-Early-stage. Actively improving detection accuracy and reliability.
-
-If something breaks or feels off, it probably is — and that feedback is useful.
+Early-stage, actively improving.
 
 ---
 
 ## Try it
 
 https://webintel.io
-
----
-
-## Notes
-
-- Works best on product pages with clear pricing  
-- Some dynamic or heavily obfuscated sites may be less reliable  
-- Detection improves over time  
-
----
-
-## License
-
-MIT
