@@ -1,5 +1,10 @@
 # Webintel
 
+## Install
+
+```bash
+npm install @acpro/webintel
+
 Real-time price and stock change detection — delivered as clean events.
 
 Track competitor pricing, detect meaningful changes instantly, and trigger actions via API and webhooks.
