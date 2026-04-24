@@ -19,36 +19,34 @@ await client.subscribe({
   events: ["price_drop"]
 });
 ```
+## What this does
 
-## Install
+Track real changes on any webpage — without scraping.
 
-```bash
-npm install @acpro/webintel
+You get structured events like:
 
-Quick example:
+* price drops
+* price increases
+* back in stock
+* out of stock
 
-const Webintel = require("@acpro/webintel");
+No polling. No raw HTML. Just signals.
 
-const client = new Webintel("YOUR_API_KEY");
+## Why not scraping?
 
-await client.subscribe({
-  url: "https://example.com/product",
-  events: ["price_drop"]
-});
+Most tools:
 
-## Why this exists
+* break when websites change
+* require proxies and retries
+* return raw, messy data
 
-Most tools either:
+Webintel:
 
-* return raw scraped data
-* or trigger alerts on every minor change
+* detects real changes
+* returns structured events
+* works reliably without scraping
 
-Webintel focuses on:
-
-→ meaningful events only
-→ clean structured output
-→ ready for automation
-
+Built for automation and AI agents.
 
 Real-time price and stock change detection — delivered as clean events.
 
