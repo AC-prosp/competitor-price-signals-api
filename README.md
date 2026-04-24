@@ -5,6 +5,18 @@
 ```bash
 npm install @acpro/webintel
 
+Quick example:
+
+const Webintel = require("@acpro/webintel");
+
+const client = new Webintel("YOUR_API_KEY");
+
+await client.subscribe({
+  url: "https://example.com/product",
+  events: ["price_drop"]
+});
+
+
 Real-time price and stock change detection — delivered as clean events.
 
 Track competitor pricing, detect meaningful changes instantly, and trigger actions via API and webhooks.
