@@ -2,7 +2,7 @@
 ## Install in 5 seconds
 
 ```bash
-npm install @acpro/webintel
+npm install webintel
 ```
 
 ---
