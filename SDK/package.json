@@ -1,14 +1,20 @@
 {
   "name": "webintel",
-  "version": "1.0.1",
-  "description": "Webintel API client",
+  "version": "1.0.3",
+  "description": "Real-time price and stock change detection — delivered as clean events",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
-  "keywords": ["api", "pricing", "monitoring"],
+  "keywords": ["api", "pricing", "monitoring", "webhooks", "ecommerce", "automation", "ai-agents", "price-tracking"],
+  "author": "Webintel",
   "license": "MIT",
+  "homepage": "https://webintel.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AC-prosp/competitor-price-signals-api"
+  },
   "devDependencies": {
     "typescript": "^5.0.0"
   }
