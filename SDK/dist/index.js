@@ -40,5 +40,23 @@ class Webintel {
             method: "DELETE",
         });
     }
+    async record(params) {
+        return this.request("/signals/record", {
+            method: "POST",
+            body: JSON.stringify(params),
+        });
+    }
+    static async generateKey(email) {
+        const res = await fetch("https://api.webintel.io/v1/keys/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+        });
+        if (!res.ok) {
+            const text = await res.text();
+            throw new Error(`Webintel API error (${res.status}): ${text}`);
+        }
+        return res.json();
+    }
 }
 exports.Webintel = Webintel;

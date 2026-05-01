@@ -4,6 +4,10 @@ interface SubscribeParams {
     events: EventType[];
     webhook_url?: string;
 }
+interface RecordParams {
+    monitor_id: string;
+    event: EventType;
+}
 export declare class Webintel {
     private apiKey;
     private baseUrl;
@@ -12,5 +16,10 @@ export declare class Webintel {
     subscribe(params: SubscribeParams): Promise<any>;
     list(): Promise<any>;
     delete(id: string): Promise<any>;
+    record(params: RecordParams): Promise<any>;
+    static generateKey(email: string): Promise<{
+        api_key: string;
+        plan: string;
+    }>;
 }
 export {};

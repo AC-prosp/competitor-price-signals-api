@@ -10,6 +10,11 @@ interface SubscribeParams {
   webhook_url?: string;
 }
 
+interface RecordParams {
+  monitor_id: string;
+  event: EventType;
+}
+
 export class Webintel {
   private apiKey: string;
   private baseUrl: string;
@@ -18,7 +23,6 @@ export class Webintel {
     if (!apiKey) {
       throw new Error("API key is required");
     }
-
     this.apiKey = apiKey;
     this.baseUrl = "https://api.webintel.io/v1";
   }
@@ -32,12 +36,10 @@ export class Webintel {
         ...(options.headers || {}),
       },
     });
-
     if (!res.ok) {
       const text = await res.text();
       throw new Error(`Webintel API error (${res.status}): ${text}`);
     }
-
     return res.json();
   }
 
@@ -58,5 +60,25 @@ export class Webintel {
     return this.request(`/signals/${id}`, {
       method: "DELETE",
     });
+  }
+
+  async record(params: RecordParams) {
+    return this.request("/signals/record", {
+      method: "POST",
+      body: JSON.stringify(params),
+    });
+  }
+
+  static async generateKey(email: string): Promise<{ api_key: string; plan: string }> {
+    const res = await fetch("https://api.webintel.io/v1/keys/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Webintel API error (${res.status}): ${text}`);
+    }
+    return res.json();
   }
 }
